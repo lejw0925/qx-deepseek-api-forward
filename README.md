@@ -25,6 +25,21 @@
 
 ## 安装
 
+两种方式选一种，别同时加，否则规则会重复触发。
+
+### 方式一：远程重写资源（省事）
+
+在配置文件的 `[rewrite_remote]` 里加一行，QX 会自动下载规则和脚本：
+
+```ini
+[rewrite_remote]
+https://raw.githubusercontent.com/lejw0925/qx-deepseek-api-forward/main/quantumultx.conf, tag=DeepSeek转发, enabled=true
+```
+
+资源文件里带了 `[mitm] hostname`，QX 一般会自动并入；没生效就按方式二第 2 步手动加。
+
+### 方式二：手动并入（可控）
+
 1. 把下面的行并入 QX 配置文件的 `[rewrite_local]`：
 
    ```ini

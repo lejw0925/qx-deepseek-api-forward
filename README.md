@@ -33,10 +33,18 @@
 
 ```ini
 [rewrite_remote]
-https://raw.githubusercontent.com/lejw0925/qx-deepseek-api-forward/main/quantumultx.conf, tag=DeepSeek转发, enabled=true
+https://raw.githubusercontent.com/lejw0925/qx-deepseek-api-forward/main/rewrite.conf, tag=DeepSeek转发, enabled=true
+```
+
+`raw.githubusercontent.com` 不通就用 CDN 版资源（脚本也走 CDN）：
+
+```ini
+https://fastly.jsdelivr.net/gh/lejw0925/qx-deepseek-api-forward@main/rewrite-cdn.conf, tag=DeepSeek转发, enabled=true
 ```
 
 资源文件里带了 `[mitm] hostname`，QX 一般会自动并入；没生效就按方式二第 2 步手动加。
+
+> 注意：重写资源只能用 `rewrite.conf` / `rewrite-cdn.conf`。`quantumultx.conf` 是手动并入用的片段，里面带 `[rewrite_local]` 段，当资源添加会报 `invalid line rewrite_local`。
 
 ### 方式二：手动并入（可控）
 
@@ -88,6 +96,7 @@ const DEFAULT_TARGET = 'https://api.lmr-leavingnow.cn.mt';
 - **脚本完全没触发**：MitM 没开、证书没信任，或者 `hostname` 里漏了 `api.deepseek.com`。
 - **改了脚本但不生效**：QX 会缓存远程脚本，重新添加规则或更新资源后再试。用 jsDelivr 的话，`@main` 本身也有缓存，改了脚本可能要等一会儿；想固定版本可以用 `@<commit sha>`。
 - **QX 拉不到脚本**：`raw.githubusercontent.com` 被重置就换上面的 jsDelivr 镜像地址，两条规则只留一条。也可以用 `https://gh-proxy.com/https://raw.githubusercontent.com/...` 这类第三方加速前缀，但脚本会经过第三方，介意就别用。
+- **添加重写资源时报 `invalid line rewrite_local`**：把 `quantumultx.conf` 当资源加了。那个文件是手动并入用的，重写资源请用 `rewrite.conf` 或 `rewrite-cdn.conf`。
 - **App 有 SSL Pinning**：MitM 拿不到明文，这套方案对它无效。DeepSeek 官方 SDK 一般没有。
 
 ## 更省心的做法

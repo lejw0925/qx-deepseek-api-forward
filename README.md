@@ -31,6 +31,12 @@
    ^https:\/\/api\.deepseek\.com url script-request-header https://raw.githubusercontent.com/lejw0925/qx-deepseek-api-forward/main/deepseek-forward.js
    ```
 
+   `raw.githubusercontent.com` 在国内经常连不上，拉取失败就换成 jsDelivr 镜像：
+
+   ```ini
+   ^https:\/\/api\.deepseek\.com url script-request-header https://fastly.jsdelivr.net/gh/lejw0925/qx-deepseek-api-forward@main/deepseek-forward.js
+   ```
+
 2. 把 `api.deepseek.com` 加进已有的 `[mitm]` 行：
 
    ```ini
@@ -65,7 +71,8 @@ const DEFAULT_TARGET = 'https://api.lmr-leavingnow.cn.mt';
 
 - **401 / 鉴权失败**：先看日志里有没有改写记录。有记录但还是 401，说明问题在中转站那边（Key 是否支持该中转、余额、模型名），不是头被剥掉。
 - **脚本完全没触发**：MitM 没开、证书没信任，或者 `hostname` 里漏了 `api.deepseek.com`。
-- **改了脚本但不生效**：QX 会缓存远程脚本，重新添加规则或更新资源后再试。
+- **改了脚本但不生效**：QX 会缓存远程脚本，重新添加规则或更新资源后再试。用 jsDelivr 的话，`@main` 本身也有缓存，改了脚本可能要等一会儿；想固定版本可以用 `@<commit sha>`。
+- **QX 拉不到脚本**：`raw.githubusercontent.com` 被重置就换上面的 jsDelivr 镜像地址，两条规则只留一条。
 - **App 有 SSL Pinning**：MitM 拿不到明文，这套方案对它无效。DeepSeek 官方 SDK 一般没有。
 
 ## 更省心的做法

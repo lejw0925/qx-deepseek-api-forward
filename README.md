@@ -36,10 +36,10 @@
 https://raw.githubusercontent.com/lejw0925/qx-deepseek-api-forward/main/rewrite.conf, tag=DeepSeek转发, enabled=true
 ```
 
-`raw.githubusercontent.com` 不通就用 CDN 版资源（脚本也走 CDN）：
+`raw.githubusercontent.com` 不通就用 CDN 版资源（脚本也走 CDN）。jsDelivr 的 `@main` 有缓存，可能返回旧内容，所以这里固定到具体版本：
 
 ```ini
-https://fastly.jsdelivr.net/gh/lejw0925/qx-deepseek-api-forward@main/rewrite-cdn.conf, tag=DeepSeek转发, enabled=true
+https://fastly.jsdelivr.net/gh/lejw0925/qx-deepseek-api-forward@380efb1e74f4c612441eeac09b76e71ae5d4069f/rewrite-cdn.conf, tag=DeepSeek转发, enabled=true
 ```
 
 资源文件里带了 `[mitm] hostname`，QX 一般会自动并入；没生效就按方式二第 2 步手动加。
